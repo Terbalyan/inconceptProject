@@ -1,5 +1,5 @@
 import React from 'react';
-import ProjectList from './ProjectList';
+import ProjectList from './scripts/components/ProjectList';
 import './App.css';
 import PersonIcon from '@material-ui/icons/Person';
 

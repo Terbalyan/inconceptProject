@@ -1,11 +1,11 @@
 import React from "react";
-import './ProjectList.css';
+import Popup from "./Popup";
+import './styles/ProjectList.css';
 import { TextField } from "@material-ui/core";
 import { Button } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import Popup from "./Popup";
 import moment from "moment";
 
 
@@ -41,7 +41,8 @@ export default class ProjectList extends React.Component {
                                     buttonProp: true,
                                     btnDisplay: document.getElementById('btn').style.display = 'none'
                                 });
-                        }}><Add /></Button>
+                            }}><Add />
+                        </Button>
                     </div>
                     <>
                         <Popup trigger={buttonProp}>
@@ -76,16 +77,15 @@ export default class ProjectList extends React.Component {
                                 variant='contained' 
                                 onClick={() => {
                                     if(name && shortSummary) {
-                                        this.setState({
+                                        this.setState({ 
+                                            name: '', 
+                                            shortSummary: '', 
                                             buttonProp: false,
-                                            btnDisplay: document.getElementById('btn').style.display = 'flex'
+                                            btnDisplay: document.getElementById('btn').style.display = 'flex' 
                                         });
-
-                                        this.setState({ name: '', shortSummary: '' });
                                         
                                         onAdd(name, shortSummary);
                                     }
-                                    btnDisplay = 'block';
                                 }}>Submit</Button>
                         </Popup>
                     </>

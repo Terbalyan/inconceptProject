@@ -13,6 +13,5 @@
 .popup-inner {
     position: relative;
     width: 100%;
-    max-width: 200px;
-    height: 150px;
+    max-width: 12rem;
 }

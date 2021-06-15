@@ -1,25 +1,53 @@
-import logo from './logo.svg';
+import React from 'react';
+import ProjectList from './ProjectList';
 import './App.css';
+import PersonIcon from '@material-ui/icons/Person';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      projects: [
+        {
+          name: '',
+          shortSummary: '',
+          icon: '',
+          creationDate: ''
+        }
+      ],
+    };
+  }
+  
+  deleteProj = (delProj) => {
+    const newProj = this.state.projects.filter((proj) => proj !== delProj);
+    
+    this.setState({projects: newProj});
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <ProjectList
+          deleteProj={this.deleteProj}
+          projects={this.state.projects} 
+          onAdd={(name, shortSummary) => {
+            this.setState({
+              ...this.state,
+              projects: [
+                ...this.state.projects,
+                {
+                  name,
+                  shortSummary,
+                  icon: <PersonIcon color='primary' />,
+                  creationDate: new Date()
+                }
+              ]
+            })
+        }}/>
+      </div>
+    );
+  }
 }
 
 export default App;

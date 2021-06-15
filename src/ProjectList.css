@@ -1,0 +1,67 @@
+body {
+    font-family: "Gill Sans", sans-serif;
+    background: aliceblue;
+}
+
+h1 {
+    text-align: left;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: #000;
+}
+
+.inlineDisplay {
+    display: inline-block;
+    width: 230px;
+    border-radius: 15px;
+    border: 1px solid #3f51b5;
+    background: #fff;
+    margin-right: 15px;
+}
+
+.midPoss {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.possition {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 10px;
+}
+
+.headerPossition {
+    display: flex;
+    justify-content: center;
+    margin-right: 15px;
+    margin-left: 15px;
+    margin-top: 10px;
+    border-radius: 50px;
+    background: aliceblue;
+}
+
+#btn {
+    width: initial;
+}
+
+#customPadding {
+    margin-top: 10px;
+}
+
+hr {
+    margin-left: 105px;
+    margin-right: 105px;
+    height: 3px;
+    background: #3f51b5;
+    border: 0;
+    border-radius: 3px;
+}
+
+.date {
+    font-size: 13px;
+}
+
+.MuiButtonBase-root {
+    width: inherit;
+}

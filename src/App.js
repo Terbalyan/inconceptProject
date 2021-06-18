@@ -1,53 +1,41 @@
 import React from 'react';
 import ProjectList from './scripts/components/ProjectList';
 import './App.css';
-import PersonIcon from '@material-ui/icons/Person';
+import AccountTreeIcon from '@material-ui/icons/AccountTree';
+import { useState } from 'react';
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
+export default function App() {
+    const [projects, setProjects] = useState([
+      {
+        name: 'dasd',
+        shortSummary: 'asdasdasd',
+        icon: <AccountTreeIcon color='primary' />,
+        creationDate: ''
+      }
+    ]);
 
-    this.state = {
-      projects: [
-        {
-          name: '',
-          shortSummary: '',
-          icon: '',
-          creationDate: ''
-        }
-      ],
-    };
-  }
-  
-  deleteProj = (delProj) => {
-    const newProj = this.state.projects.filter((proj) => proj !== delProj);
-    
-    this.setState({projects: newProj});
-  }
+    const deleteProj = (delProj) => {
+      const newProj = projects.filter((proj) => proj !== delProj);
+      
+      setProjects(newProj);
+    }
 
-  render() {
     return (
       <div className="App">
         <ProjectList
-          deleteProj={this.deleteProj}
-          projects={this.state.projects} 
+          projects={projects}
+          deleteProj={deleteProj}
           onAdd={(name, shortSummary) => {
-            this.setState({
-              ...this.state,
-              projects: [
-                ...this.state.projects,
+            setProjects([
+              ...projects,
                 {
                   name,
                   shortSummary,
-                  icon: <PersonIcon color='primary' />,
+                  icon: <AccountTreeIcon color='primary' />,
                   creationDate: new Date()
                 }
-              ]
-            })
+              ])
         }}/>
       </div>
     );
-  }
-}
-
-export default App;
+  };

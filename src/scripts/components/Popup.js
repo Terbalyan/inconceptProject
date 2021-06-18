@@ -1,5 +1,5 @@
 import React from "react";
-import './styles/Popup.css';
+import '../../styles/Popup.css';
 
 export default class Popup extends React.Component {
     constructor(props) {
@@ -13,7 +13,7 @@ export default class Popup extends React.Component {
     render() {
         return (this.props.trigger) ? (
             <div className='popup'>
-                <div className='popup-inner'>
+                <div className='popupInner'>
                     {this.props.children}
                 </div>
             </div>

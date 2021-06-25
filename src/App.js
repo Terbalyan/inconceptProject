@@ -1,41 +1,43 @@
 import React from 'react';
-import ProjectList from './scripts/components/ProjectList';
+import ProjectList from './components/ProjectList';
 import './App.css';
-import AccountTreeIcon from '@material-ui/icons/AccountTree';
-import { useState } from 'react';
+import ProjectForm from './components/ProjectForm';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function App() {
-    const [projects, setProjects] = useState([
-      {
-        name: 'dasd',
-        shortSummary: 'asdasdasd',
-        icon: <AccountTreeIcon color='primary' />,
-        creationDate: ''
+
+  const projects = useSelector((state) => {
+    return state.projects;
+  });
+
+  // const name = useSelector((state) => {
+  //   return state.projects.name;
+  // });
+
+  const dispatch = useDispatch();
+
+  // const onDelete = (delProj) => {
+  //   setProjects(projects.filter((proj) => proj.id !== delProj.id));
+  // }
+
+  const onAdd = (name, shortSummary) => {
+    dispatch({
+      type: 'onAdd',
+      payload: {
+        name,
+        shortSummary
       }
-    ]);
+    });
+  }
 
-    const deleteProj = (delProj) => {
-      const newProj = projects.filter((proj) => proj !== delProj);
-      
-      setProjects(newProj);
-    }
-
-    return (
-      <div className="App">
-        <ProjectList
-          projects={projects}
-          deleteProj={deleteProj}
-          onAdd={(name, shortSummary) => {
-            setProjects([
-              ...projects,
-                {
-                  name,
-                  shortSummary,
-                  icon: <AccountTreeIcon color='primary' />,
-                  creationDate: new Date()
-                }
-              ])
-        }}/>
-      </div>
-    );
-  };
+  return (
+    <div className='App'>
+      <ProjectForm onAdd={onAdd} />
+      <ProjectList
+        projects={projects}
+        // onDelete={onDelete}
+        // editProj={editProj}
+      />
+    </div>
+  );
+};

@@ -3,9 +3,9 @@ import projectsReducer, { initialProjets } from './features/projects/projectsSli
 
 
 const store = createStore(combineReducers({
-    projects: projectsReducer
+    projects: projectsReducer,
 }), {
-    projects: initialProjets
+    projects: initialProjets,
 });
 
 export default store;

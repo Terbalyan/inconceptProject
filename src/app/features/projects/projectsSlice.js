@@ -20,9 +20,9 @@ export default function projectsReducer(state=[], action) {
                 }
             ];
         case ON_DELETE:
-            return state.filter((proj) => proj.id !== payload.id);
+            return state.filter(proj => proj.id !== payload.id);
         case ON_EDIT:
-            let item = state.find(s => s.id === payload.id);
+            let item = state.find(proj => proj.id === payload.id);
             item.name = payload.name
             item.shortSummary = payload.shortSummary
 
@@ -49,7 +49,7 @@ export const initialProjets = [
     },
     {
         id: nanoid(),
-        name: 'Project 3',
+        name : 'Project 3',
         shortSummary: 'dfg',
         icon: <AssignmentIcon color='primary' />,
         creationDate: ''

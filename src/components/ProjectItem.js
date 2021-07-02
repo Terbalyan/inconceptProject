@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import EditDialog from './EditDialog';
 
-export default function ProjectItem({project, onDelete, onEdit}) {
+export default function ProjectItem({project, onDelete, onEdit, getName}) {
     const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
@@ -21,7 +21,7 @@ export default function ProjectItem({project, onDelete, onEdit}) {
     };
 
     const history = useHistory();
-    const navigateTo = () => history.push('/tasks');
+    const navigateTo = (id) => history.push(`/project/${id}`);
 
     return (
         <div
@@ -40,18 +40,29 @@ export default function ProjectItem({project, onDelete, onEdit}) {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">
+                    <Button 
+                        onClick={handleClose} 
+                        color="primary">
                         Cancle
                     </Button>
-                    <Button onClick={() => {
-                        handleClose();
-                        onDelete(project);
-                    }} color="primary" autoFocus>
+                    <Button 
+                        onClick={() => {
+                            handleClose();
+                            onDelete(project);
+                        }} 
+                        color="primary" 
+                        autoFocus
+                    >
                         Delete
                     </Button>
                 </DialogActions>
             </Dialog>
-            <div onClick={navigateTo}>
+            <div 
+                onClick={() => {
+                    navigateTo(project.id);
+                    getName(project.name);
+                }}
+            >
                 <div className='headerPossition'>
                     <p>{project.icon}</p>
                     <h3>{project.name}</h3>

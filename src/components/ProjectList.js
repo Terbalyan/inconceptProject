@@ -1,29 +1,24 @@
-import { Link } from 'react-router-dom';
-import '../styles/ProjectList.css';
 import ProjectItem from './ProjectItem';
+import '../styles/ProjectList.css';
 
-
-export default function ProjectList({projects, onDelete, onEdit}) {
+export default function ProjectList({projects, onDelete, onEdit, getName}) {
     return (
-        <>
-            <div className='projectsPosition'>
-            <Link to='/'>Projects</Link>
-
-                <h3>PROJECT LIST</h3>
-                {
-                    (projects.length) ? (
-                        projects.map((project, index) => {
-                            return (
-                                <ProjectItem 
-                                    key={index} 
-                                    project={project} 
-                                    onDelete={onDelete}
-                                    onEdit={onEdit}
-                                />
-                            );
-                    })) : <p>No projects!</p>
-                }
-            </div>
-        </>
+        <div className='projectsPosition'>
+            <h3>PROJECT LIST</h3>
+            {
+                (projects.length) ? (
+                    projects.map((project, index) => {
+                        return (
+                            <ProjectItem 
+                                key={index} 
+                                project={project} 
+                                onDelete={onDelete}
+                                onEdit={onEdit}
+                                getName={getName}
+                            />
+                        );
+                })) : <p>No projects!</p>
+            }
+        </div>
     );
 };

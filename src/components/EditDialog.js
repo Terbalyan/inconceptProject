@@ -70,21 +70,21 @@ export default function EditDialog(props) {
                     />
                 </DialogContent>
                 <DialogActions>
-                <Button onClick={handleClose} color='primary'>
-                    Cancel
-                </Button>
-                <Button 
-                    type='submit'
-                    color='primary'
-                    onClick={() => {
-                        if(name && shortSummary) {
-                            newProps();
-                            handleClose();
-                        }
-                    }}
-                >
-                    Save
-                </Button>
+                    <Button onClick={handleClose} color='primary'>
+                        Cancel
+                    </Button>
+                    <Button 
+                        type='submit'
+                        color='primary'
+                        onClick={() => {
+                            if(name && shortSummary) {
+                                newProps();
+                                handleClose();
+                            }
+                        }}
+                    >
+                        Save
+                    </Button>
                 </DialogActions>
             </Dialog>
         </div>

@@ -10,7 +10,7 @@ export default function App({projects}) {
         <BrowserRouter>
           <Switch>
             <Route path='/projects' component={ProjectsPage} exact />
-            <Route path='/project' component={TasksPage} />
+            <Route exact path='/project/:id' component={TasksPage} />
             <Redirect to='/projects' />
           </Switch>
         </BrowserRouter>

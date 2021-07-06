@@ -1,10 +1,10 @@
 import ProjectItem from './ProjectItem';
 import '../styles/ProjectList.css';
 
-export default function ProjectList({projects, onDelete, onEdit, getName}) {
+export default function ProjectList({projects, onDelete, onEdit}) {
     return (
         <div className='projectsPosition'>
-            <h3>PROJECT LIST</h3>
+            <h3>PROJECTS</h3>
             {
                 (projects.length) ? (
                     projects.map((project, index) => {
@@ -14,7 +14,6 @@ export default function ProjectList({projects, onDelete, onEdit, getName}) {
                                 project={project} 
                                 onDelete={onDelete}
                                 onEdit={onEdit}
-                                getName={getName}
                             />
                         );
                 })) : <p>No projects!</p>

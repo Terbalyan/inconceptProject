@@ -4,13 +4,14 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import AddIcon from '@material-ui/icons/Add';
 import { TextField } from '@material-ui/core';
 import { useState } from 'react';
+import { IconButton } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 
-export default function FormDialog(props) {
+export default function SubTasksDialog({onAdd}) {
     const [name, setName] = useState('');
-    const [shortSummary, setShortSummary] = useState('');
+    const [description, setDescription] = useState('');
 
     const [open, setOpen] = useState(false);
 
@@ -23,27 +24,28 @@ export default function FormDialog(props) {
     };
 
     const newProps = () => {
-        if(name && shortSummary) {
-            props.onAdd(name, shortSummary);
+        if(name && description) {
+            onAdd(name, description);
 
             setName('');
-            setShortSummary('');
+            setDescription('');
             setOpen(false);
         }
     }
 
     return (
         <>
-            <Button
-                className='changeDisplay'
-                color='primary'
-                variant='contained'
-                onClick={handleClickOpen}
+            <IconButton 
+                onClick={() => {
+                    handleClickOpen();
+                }} 
+                aria-label="delete" 
+                size="small"
             >
-                <AddIcon />project
-            </Button>
+                <AddIcon fontSize="inherit" />
+            </IconButton>
             <Dialog open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
-                <DialogTitle id='form-dialog-title'>Add Project</DialogTitle>
+                <DialogTitle id='form-dialog-title'>Add Sub Task</DialogTitle>
                 <DialogContent>
                     <TextField
                         autoFocus
@@ -59,13 +61,13 @@ export default function FormDialog(props) {
                     />
                     <TextField
                         margin='dense'
-                        id='Summary'
-                        label='Summary'
-                        placeholder='Summary'
+                        id='Description'
+                        label='Description'
+                        placeholder='Description'
                         type='text'
                         fullWidth
                         onChange={(e) => {
-                            setShortSummary(e.target.value);
+                            setDescription(e.target.value);
                         }}
                     />
                 </DialogContent>
@@ -77,7 +79,7 @@ export default function FormDialog(props) {
                         type='submit'
                         color='primary'
                         onClick={() => {
-                            if(name && shortSummary) {
+                            if(name && description) {
                                 newProps();
                                 handleClose();
                             }

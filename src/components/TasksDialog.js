@@ -8,9 +8,9 @@ import AddIcon from '@material-ui/icons/Add';
 import { TextField } from '@material-ui/core';
 import { useState } from 'react';
 
-export default function FormDialog(props) {
+export default function TasksDialog({onAdd}) {
     const [name, setName] = useState('');
-    const [shortSummary, setShortSummary] = useState('');
+    const [description, setDescription] = useState('');
 
     const [open, setOpen] = useState(false);
 
@@ -23,11 +23,11 @@ export default function FormDialog(props) {
     };
 
     const newProps = () => {
-        if(name && shortSummary) {
-            props.onAdd(name, shortSummary);
+        if(name && description) {
+            onAdd(name, description);
 
             setName('');
-            setShortSummary('');
+            setDescription('');
             setOpen(false);
         }
     }
@@ -35,15 +35,20 @@ export default function FormDialog(props) {
     return (
         <>
             <Button
-                className='changeDisplay'
+                style={{
+                    float: 'right',
+                    position: 'relative',
+                    top: '15px'
+                }}
                 color='primary'
-                variant='contained'
-                onClick={handleClickOpen}
+                onClick={() => {
+                    handleClickOpen();
+                }}
             >
-                <AddIcon />project
+                <AddIcon fontSize='small' />
             </Button>
             <Dialog open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
-                <DialogTitle id='form-dialog-title'>Add Project</DialogTitle>
+                <DialogTitle id='form-dialog-title'>Add Task</DialogTitle>
                 <DialogContent>
                     <TextField
                         autoFocus
@@ -59,13 +64,13 @@ export default function FormDialog(props) {
                     />
                     <TextField
                         margin='dense'
-                        id='Summary'
-                        label='Summary'
-                        placeholder='Summary'
+                        id='Description'
+                        label='Description'
+                        placeholder='Description'
                         type='text'
                         fullWidth
                         onChange={(e) => {
-                            setShortSummary(e.target.value);
+                            setDescription(e.target.value);
                         }}
                     />
                 </DialogContent>
@@ -77,7 +82,7 @@ export default function FormDialog(props) {
                         type='submit'
                         color='primary'
                         onClick={() => {
-                            if(name && shortSummary) {
+                            if(name && description) {
                                 newProps();
                                 handleClose();
                             }

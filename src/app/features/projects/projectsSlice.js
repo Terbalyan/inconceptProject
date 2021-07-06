@@ -1,5 +1,4 @@
 import AssignmentIcon from '@material-ui/icons/Assignment';
-import { nanoid } from 'nanoid'
 export const ON_ADD = 'ON_ADD';
 export const ON_DELETE = 'ON_DELETE';
 export const ON_EDIT = 'ON_EDIT';
@@ -12,7 +11,7 @@ export default function projectsReducer(state=[], action) {
             return [
                 ...state,
                 {
-                    id: nanoid(),
+                    id: state[state.length - 1].id + 1,
                     name: payload.name,
                     shortSummary: payload.shortSummary,
                     icon: <AssignmentIcon color='primary' />,
@@ -23,8 +22,8 @@ export default function projectsReducer(state=[], action) {
             return state.filter(proj => proj.id !== payload.id);
         case ON_EDIT:
             let item = state.find(proj => proj.id === payload.id);
-            item.name = payload.name
-            item.shortSummary = payload.shortSummary
+            item.name = payload.name;
+            item.shortSummary = payload.shortSummary;
 
             return [...state];
         default:
@@ -34,22 +33,22 @@ export default function projectsReducer(state=[], action) {
 
 export const initialProjets = [
     {
-        id: nanoid(),
+        id: 1,
         name: 'Project 1',
         shortSummary: 'abc',
         icon: <AssignmentIcon color='primary' />,
-        creationDate: ''
+        creationDate: '',
     },
     {
-        id: nanoid(),
+        id: 2,
         name: 'Project 2',
         shortSummary: 'qwe',
         icon: <AssignmentIcon color='primary' />,
         creationDate: ''
     },
     {
-        id: nanoid(),
-        name : 'Project 3',
+        id: 3,
+        name: 'Project 3',
         shortSummary: 'dfg',
         icon: <AssignmentIcon color='primary' />,
         creationDate: ''
@@ -58,6 +57,10 @@ export const initialProjets = [
 
 export function getProjects(state) {
     return state.projects;
+}
+
+export function getProject(state, id) {
+    return state.projects.find(project => project.id === id);
 }
 
 export function editNameShortSummary(newName, newShortSummary) {

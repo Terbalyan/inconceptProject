@@ -1,14 +1,17 @@
 import { combineReducers, createStore } from 'redux';
-import NamesReducer, { initialName } from './features/names/namesSlice';
 import projectsReducer, { initialProjets } from './features/projects/projectsSlice';
+import subTasksReducer, { initialSubTasks } from './features/tasks/subTasksSlice';
+import tasksReducer, { initialTasks } from './features/tasks/tasksSlice';
 
 
 const store = createStore(combineReducers({
     projects: projectsReducer,
-    names: NamesReducer
+    tasks: tasksReducer,
+    subTasks: subTasksReducer
 }), {
     projects: initialProjets,
-    names: initialName
+    tasks: initialTasks,
+    subTasks: initialSubTasks,
 });
 
 export default store;

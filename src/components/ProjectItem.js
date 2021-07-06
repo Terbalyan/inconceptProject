@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import EditDialog from './EditDialog';
 
-export default function ProjectItem({project, onDelete, onEdit, getName}) {
+export default function ProjectItem({project, onDelete, onEdit}) {
     const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
@@ -58,10 +58,7 @@ export default function ProjectItem({project, onDelete, onEdit, getName}) {
                 </DialogActions>
             </Dialog>
             <div 
-                onClick={() => {
-                    navigateTo(project.id);
-                    getName(project.name);
-                }}
+                onClick={() => navigateTo(project.id)}
             >
                 <div className='headerPossition'>
                     <p>{project.icon}</p>

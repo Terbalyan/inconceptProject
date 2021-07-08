@@ -5,16 +5,12 @@ body {
 
 .projectsPosition {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
+    left: 8rem;
+    top: 6rem;
     width: 100%;
     max-width: 76.7rem;
-    /* overflow-y: scroll; */
     /* border: 1px solid; */
     height: 36.7rem;
-    z-index: -1;
 }
 
 .changeDisplay {

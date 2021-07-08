@@ -59,7 +59,7 @@ export function getProjects(state) {
     return state.projects;
 }
 
-export function getProject(state, id) {
+export function getProject(state, id) {;
     return state.projects.find(project => project.id === id);
 }
 

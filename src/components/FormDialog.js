@@ -35,6 +35,7 @@ export default function FormDialog(props) {
     return (
         <>
             <Button
+                style={{position: 'fixed', left: '128px'}}
                 className='changeDisplay'
                 color='primary'
                 variant='contained'

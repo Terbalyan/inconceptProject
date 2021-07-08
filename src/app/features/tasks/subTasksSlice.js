@@ -1,10 +1,10 @@
-export const ON_ADD_SUBTASK = 'ON_ADD_SUBTASK';
+export const ON_ADD_SUB_TASK = 'ON_ADD_SUBTASK';
 
 export default function subTasksReducer(state=[], action) {
     const payload = action.payload;
 
     switch (action.type) {
-        case ON_ADD_SUBTASK:
+        case ON_ADD_SUB_TASK:
             return [
                 ...state,
                 {
@@ -37,8 +37,8 @@ export const initialSubTasks = [
     {
         id: 1,
         taskId: 1,
-        name: '',
-        description: '',
+        name: 'aa',
+        description: 'bb',
         creationDate: '',
         assignee: '',
         estimatedTime: '',
@@ -48,12 +48,12 @@ export const initialSubTasks = [
 ];
 
 export function getSubTasks(state, id) {
-    return state.subTasks.filter(task => task.id === id);
+    return state.subTasks.filter(subTask => subTask.taskId === id);
 }
 
 export function editNameDescription(newName, newDescription, newTaskID) {
     return {
-        type: ON_ADD_SUBTASK,
+        type: ON_ADD_SUB_TASK,
         payload: {
             name: newName,
             description: newDescription,

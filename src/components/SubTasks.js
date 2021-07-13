@@ -21,38 +21,37 @@ export default function SubTasks({taskID, open}) {
     return (
         <div>
             {
-                subTasks.map(subTask => 
-                    <div draggable key={subTask.id} style={{position: 'relative', left: '.5rem'}} >
-                      <Collapse in={open} timeout='auto' unmountOnExit>
-                        <Box
-                            boxShadow={1}
-                            bgcolor="background.paper"
-                            m={1}
-                            p={1}
-                            style={{ display: 'flex', justifyContent: 'space-between' }}
-                          >
-                            <p>
-                              <strong>{subTask.name}</strong>
-                            </p>
-                            <p>{subTask.description}</p>
-                            <p>
-                              <small>
-                                  {subTask.creationDate = moment().format('MM/DD/YY')}
-                              </small>
-                            </p>
-                            <Avatar aria-label="recipe">T</Avatar>
-                              <div style={{display: 'inline-flex', flexDirection: 'column'}}>
-                                <IconButton  aria-label="delete" size="small">
-                                  <DeleteIcon fontSize="inherit" />
-                                </IconButton>
-                                <IconButton aria-label="delete" size="small">
-                                  <EditIcon fontSize="inherit" />
-                                </IconButton>
-                              </div>
-                          </Box>
-                        </Collapse>
-                    </div>
-                    
+              subTasks.map(subTask => 
+                  <div draggable key={subTask.id} style={{position: 'relative', left: '.5rem'}} >
+                    <Collapse in={open} timeout='auto' unmountOnExit>
+                      <Box
+                          boxShadow={1}
+                          bgcolor="background.paper"
+                          m={1}
+                          p={1}
+                          style={{ display: 'flex', justifyContent: 'space-between' }}
+                        >
+                          <p>
+                            <strong>{subTask.name}</strong>
+                          </p>
+                          <p>{subTask.description}</p>
+                          <p>
+                            <small>
+                                {subTask.creationDate = moment().format('MM/DD/YY')}
+                            </small>
+                          </p>
+                          <Avatar aria-label="recipe">T</Avatar>
+                            <div style={{display: 'inline-flex', flexDirection: 'column'}}>
+                              <IconButton  aria-label="delete" size="small">
+                                <DeleteIcon fontSize="inherit" />
+                              </IconButton>
+                              <IconButton aria-label="delete" size="small">
+                                <EditIcon fontSize="inherit" />
+                              </IconButton>
+                            </div>
+                        </Box>
+                      </Collapse>
+                  </div>
                 )
             }
             <SubTasksDialog onAdd={onAdd} />

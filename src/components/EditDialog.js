@@ -34,7 +34,6 @@ export default function EditDialog(props) {
             <Button
                 size='small' 
                 onClick={() => {
-                    
                     handleClickOpen();
                 }}
             >

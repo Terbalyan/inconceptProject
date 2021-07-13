@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
 import TasksDialog from '../components/TasksDialog';
 import { useDispatch, useSelector } from 'react-redux';
-import { editNameDescription, getTasks } from '../app/features/tasks/tasksSlice';
+import { deleteTask, editNameDescription, editTask, getTasks } from '../app/features/tasks/tasksSlice';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -21,6 +21,8 @@ import EditIcon from '@material-ui/icons/Edit';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { sort } from '../app/features/tasks/tasksSlice';
+import EditDialog from '../components/EditDialog';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,57 +41,42 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TasksPage(props) {
   const [id] = useState(+props.match.params.id);
-
+  
   const classes = useStyles();
-
+  
   const dispatch = useDispatch();
-
+  
   const project = useSelector(state => getProject(state, id));
 
   const tasks = useSelector(state => getTasks(state, id));
-  const [task, setTask] = useState(tasks);
+
   const [open, setOpen] = useState(false);
 
   const onAdd = (name, description) => {
     dispatch(editNameDescription(name, description, id ));
   }
 
-  function handleOnDragEnd(result) {
-    if(!result.destination) return;
-    const items = Array.from(task);
-    const [reordredItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reordredItem);
-
-    setTask(items);
+  const onDelete = (taskId) => {
+    dispatch(deleteTask(taskId));
   }
 
-  const [taskss] = useState(tasks);
-  const [filtered, setFiltered] = useState([]);
+  const onEdit = (name, description, taskId) => {
+    dispatch(editTask(name, description, taskId));
+  }
 
-  useEffect(
-    _ => {
-      setFiltered(taskss);
-    },
-    [taskss]
-  );
+  function handleOnDragEnd(result) {
+    const { destination, source, draggableId } = result;
 
-  const search = val => {
-    let currentTasks = [], newList = [];
-    if (val !== '') {
-      console.log(val);
-      currentTasks = taskss;
-      newList = currentTasks.filter(task => {
-        console.log(task);
-        const lc = task.name.toLowerCase();
-        const filter = val.toLowerCase();
-        
-        return lc.includes(filter);
-      });
-    } else {
-      newList = taskss;
-    }
-    setFiltered(newList);
-  };
+    if(!result.destination) return;
+
+    dispatch(sort(
+      source.droppableId,
+      destination.droppableId,
+      source.index,
+      destination.index,
+      draggableId
+    ));
+  }
 
   return (
     <>
@@ -147,7 +134,7 @@ export default function TasksPage(props) {
               <DragDropContext onDragEnd={handleOnDragEnd}>
                 <Droppable droppableId='tasks'>
                   {provided => {
-                    <Paper 
+                    return <Paper 
                       className={classes.paper} 
                       {...provided.droppableProps} 
                       ref={provided.innerRef}
@@ -157,11 +144,11 @@ export default function TasksPage(props) {
                           return (
                             <Draggable 
                               key={task.id} 
-                              draggableId={task.id} 
+                              draggableId={'' + task.id} 
                               index={index}
                             >
                               {provided => {
-                                <div 
+                                return <div 
                                   {...provided.draggableProps} 
                                   {...provided.dragHandleProps} 
                                   ref={provided.innerRef}
@@ -184,16 +171,32 @@ export default function TasksPage(props) {
                                   </p>
                                     <Avatar aria-label='recipe'>T</Avatar>
                                       <div style={{display: 'inline-flex', flexDirection: 'column'}}>
-                                        <IconButton  aria-label='delete' size='small'>
+                                        <IconButton 
+                                          aria-label='delete'
+                                          size='small' 
+                                          onClick={() => {
+                                            onDelete(task.id);
+                                          }}
+                                        >
                                           <DeleteIcon fontSize='inherit' />
                                         </IconButton>
-                                        <IconButton aria-label='delete' size='small'>
+                                        <IconButton 
+                                          aria-label='delete' 
+                                          size='small'
+                                          onClick={() => {
+                                            onEdit(task.name, task.description, task.id);
+                                          }}
+                                        >
                                           <EditIcon fontSize='inherit' />
                                         </IconButton>
                                       </div>
                                       <div>
                                         <IconButton size='small' onClick={() => setOpen(!open)}>
-                                          {open ? <KeyboardArrowUpIcon fontSize='inherit' /> : <KeyboardArrowDownIcon fontSize='inherit' />}
+                                          {
+                                            open ? 
+                                            <KeyboardArrowUpIcon fontSize='inherit' /> : 
+                                            <KeyboardArrowDownIcon fontSize='inherit' />
+                                          }
                                         </IconButton>
                                       </div>
                                   </Box>
@@ -213,14 +216,7 @@ export default function TasksPage(props) {
             <Grid item xs>
               <h3>Search</h3>
               <Paper className={classes.paper}>
-                <Search search={search}  />
-                  <div>
-                  {filtered.map(task => (
-                    <div key={task.id}>
-                      {task.name}
-                    </div>
-                  ))}
-                </div>
+                <Search tasks={tasks} />
               </Paper>
             </Grid>
           </Grid>

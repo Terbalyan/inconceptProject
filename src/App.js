@@ -4,7 +4,7 @@ import ProjectsPage from './pages/ProjectsPage';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import './App.css';
 
-export default function App({projects}) {
+export default function App() {
   return (
       <div className='App'>
         <BrowserRouter>

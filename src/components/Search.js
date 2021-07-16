@@ -1,9 +1,12 @@
 import { Box, TextField } from '@material-ui/core';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
-export default function Search({tasks}) {
+export default function Search() {
     const [filtredTasks, setFiltredTasks] = useState([]);
 
+    const tasks = useSelector(state => state.tasks);
+    
     const handleFilter = (e) => {
         const newFilter = tasks.filter((task) => {
             return task.name.toLowerCase().includes(e.target.value.toLowerCase());
@@ -24,6 +27,7 @@ export default function Search({tasks}) {
                 type='search'
                 onChange={handleFilter}
             />
+            
             {filtredTasks.length !== 0 && (
                 filtredTasks.map(task => {
                     return (

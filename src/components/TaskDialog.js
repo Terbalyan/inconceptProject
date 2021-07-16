@@ -5,49 +5,52 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import AddIcon from '@material-ui/icons/Add';
-import { TextField } from '@material-ui/core';
+import { IconButton, TextField } from '@material-ui/core';
 import { useState } from 'react';
 
-export default function TasksDialog({onAdd}) {
+export default function TaskDialog({projectId, parentTaskId, onAdd}) {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
 
     const [open, setOpen] = useState(false);
 
-    const handleClickOpen = () => {
+    const openDialog = () => {
         setOpen(true);
     };
 
-    const handleClose = () => {
+    const closeDialog = () => {
         setOpen(false);
     };
 
-    const newProps = () => {
-        if(name && description) {
-            onAdd(name, description);
+    const add = () => {
+        onAdd(createNewTask());
 
-            setName('');
-            setDescription('');
-            setOpen(false);
-        }
+        setName('');
+        setDescription('');
+        setOpen(false);
     }
+
+    const createNewTask = () => {
+        return {
+            projectId: projectId,
+            parentTaskId: parentTaskId,
+            name: name,
+            description: description,
+        }
+    };
 
     return (
         <>
-            <Button
-                style={{
-                    float: 'right',
-                    position: 'relative',
-                    top: '15px'
-                }}
-                color='primary'
-                onClick={() => {
-                    handleClickOpen();
-                }}
-            >
-                <AddIcon fontSize='small' />
-            </Button>
-            <Dialog open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
+            <div>
+                <IconButton
+                    size='small'
+                    color='primary'
+                    onClick={openDialog}
+                >
+                    <AddIcon fontSize='small' />
+                </IconButton>
+            </div>
+            <Dialog open={open} onClose={closeDialog} aria-labelledby='form-dialog-title'>
                 <DialogTitle id='form-dialog-title'>Add Task</DialogTitle>
                 <DialogContent>
                     <TextField
@@ -58,6 +61,7 @@ export default function TasksDialog({onAdd}) {
                         placeholder='Name'
                         type='text'
                         fullWidth
+                        autoComplete='off'
                         onChange={(e) => {
                             setName(e.target.value);
                         }}
@@ -69,13 +73,14 @@ export default function TasksDialog({onAdd}) {
                         placeholder='Description'
                         type='text'
                         fullWidth
+                        autoComplete='off'
                         onChange={(e) => {
                             setDescription(e.target.value);
                         }}
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color='primary'>
+                    <Button onClick={closeDialog} color='primary'>
                         Cancel
                     </Button>
                     <Button 
@@ -83,8 +88,8 @@ export default function TasksDialog({onAdd}) {
                         color='primary'
                         onClick={() => {
                             if(name && description) {
-                                newProps();
-                                handleClose();
+                                add();
+                                closeDialog();
                             }
                         }}
                     >

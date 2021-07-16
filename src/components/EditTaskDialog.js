@@ -4,48 +4,47 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { TextField } from '@material-ui/core';
+import EditIcon from '@material-ui/icons/Edit';
+import { IconButton, TextField } from '@material-ui/core';
 import { useState } from 'react';
-import { IconButton } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
 
-export default function SubTasksDialog({onAdd}) {
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
+export default function EditTaskDialog({task, onEdit}) {
+    const [name, setName] = useState(task.name);
+    const [description, setDescription] = useState(task.description);
 
     const [open, setOpen] = useState(false);
 
-    const handleClickOpen = () => {
+    const openDialog = () => {
         setOpen(true);
     };
 
-    const handleClose = () => {
+    const closeDialog = () => {
         setOpen(false);
     };
 
-    const newProps = () => {
-        if(name && description) {
-            onAdd(name, description);
+    const edit = () => {
+        onEdit(editTask());
 
-            setName('');
-            setDescription('');
-            setOpen(false);
-        }
+        setOpen(false);
     }
+
+    const editTask = () => {
+        task.name = name;
+        task.description = description;
+        return task;
+    };
 
     return (
         <>
-            <IconButton 
-                onClick={() => {
-                    handleClickOpen();
-                }} 
-                aria-label="delete" 
-                size="small"
+            <IconButton
+                size='small'
+                color='primary'
+                onClick={openDialog}
             >
-                <AddIcon fontSize="inherit" />
+                <EditIcon fontSize='small' />
             </IconButton>
-            <Dialog open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
-                <DialogTitle id='form-dialog-title'>Add Sub Task</DialogTitle>
+            <Dialog open={open} onClose={closeDialog} aria-labelledby='form-dialog-title'>
+                <DialogTitle id='form-dialog-title'>Edit Task</DialogTitle>
                 <DialogContent>
                     <TextField
                         autoFocus
@@ -55,6 +54,8 @@ export default function SubTasksDialog({onAdd}) {
                         placeholder='Name'
                         type='text'
                         fullWidth
+                        autoComplete='off'
+                        value={name}
                         onChange={(e) => {
                             setName(e.target.value);
                         }}
@@ -66,13 +67,15 @@ export default function SubTasksDialog({onAdd}) {
                         placeholder='Description'
                         type='text'
                         fullWidth
+                        autoComplete='off'
+                        value={description}
                         onChange={(e) => {
                             setDescription(e.target.value);
                         }}
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color='primary'>
+                    <Button onClick={closeDialog} color='primary'>
                         Cancel
                     </Button>
                     <Button 
@@ -80,12 +83,12 @@ export default function SubTasksDialog({onAdd}) {
                         color='primary'
                         onClick={() => {
                             if(name && description) {
-                                newProps();
-                                handleClose();
+                                edit();
+                                closeDialog();
                             }
                         }}
                     >
-                        Submit
+                        Save
                     </Button>
                 </DialogActions>
             </Dialog>

@@ -54,6 +54,7 @@ export default function FormDialog(props) {
                         placeholder='Name'
                         type='text'
                         fullWidth
+                        autoComplete='off'
                         onChange={(e) => {
                             setName(e.target.value);
                         }}
@@ -65,6 +66,7 @@ export default function FormDialog(props) {
                         placeholder='Summary'
                         type='text'
                         fullWidth
+                        autoComplete='off'
                         onChange={(e) => {
                             setShortSummary(e.target.value);
                         }}

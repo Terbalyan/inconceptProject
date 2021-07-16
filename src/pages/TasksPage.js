@@ -3,26 +3,21 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
-import TasksDialog from '../components/TasksDialog';
+// import TaskDialog from '../components/TaskDialog';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteTask, editNameDescription, editTask, getTasks } from '../app/features/tasks/tasksSlice';
+import { addTask } from '../app/features/tasks/tasksSlice';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import SubTasks from '../components/SubTasks';
 import Search from '../components/Search';
 import { getProject } from '../app/features/projects/projectsSlice';
-import moment from 'moment';
 import { Box } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import { Avatar } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { sort } from '../app/features/tasks/tasksSlice';
-import EditDialog from '../components/EditDialog';
+import TaskList from '../components/TaskList';
+import Task from '../components/Task';
+import SummaryTask from '../components/SummaryTask';
+import TaskDialog from '../components/TaskDialog';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,28 +35,17 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function TasksPage(props) {
+  //TODO: change
   const [id] = useState(+props.match.params.id);
-  
+
   const classes = useStyles();
   
   const dispatch = useDispatch();
   
   const project = useSelector(state => getProject(state, id));
 
-  const tasks = useSelector(state => getTasks(state, id));
-
-  const [open, setOpen] = useState(false);
-
-  const onAdd = (name, description) => {
-    dispatch(editNameDescription(name, description, id ));
-  }
-
-  const onDelete = (taskId) => {
-    dispatch(deleteTask(taskId));
-  }
-
-  const onEdit = (name, description, taskId) => {
-    dispatch(editTask(name, description, taskId));
+  const addNewTask = (task) => {
+    dispatch(addTask(task));
   }
 
   function handleOnDragEnd(result) {
@@ -106,31 +90,6 @@ export default function TasksPage(props) {
           <Grid container spacing={1}>
             <Grid item xs>
               <h3>Task Names</h3>
-              <Paper className={classes.paper}>
-                {
-                  tasks.map((task, index) => {
-                    return (
-                      <div key={index}>
-                        <Box
-                          boxShadow={2}
-                          bgcolor='background.paper'
-                          m={1}
-                          p={1}
-                          style={{ display: 'flex', justifyContent: 'space-between' }}
-                        >
-                          <p>
-                            <strong>{task.name}</strong>
-                          </p>
-                        </Box>
-                      </div>
-                    )
-                  })
-                }
-              </Paper>
-            </Grid>
-            <Grid item xs={6}>
-              <TasksDialog onAdd={onAdd} />
-              <h3>Tasks</h3>
               <DragDropContext onDragEnd={handleOnDragEnd}>
                 <Droppable droppableId='tasks'>
                   {provided => {
@@ -140,72 +99,29 @@ export default function TasksPage(props) {
                       ref={provided.innerRef}
                     >
                       {
-                        tasks.map((task, index) => {
-                          return (
-                            <Draggable 
-                              key={task.id} 
-                              draggableId={'' + task.id} 
-                              index={index}
-                            >
-                              {provided => {
-                                return <div 
-                                  {...provided.draggableProps} 
-                                  {...provided.dragHandleProps} 
-                                  ref={provided.innerRef}
-                                >
-                                  <Box
-                                    boxShadow={2}
-                                    bgcolor='background.paper'
-                                    m={1}
-                                    p={1}
-                                    style={{ display: 'flex', justifyContent: 'space-between' }}
-                                  >
-                                  <p>
-                                    <strong>{task.name}</strong>
-                                  </p>
-                                  <p>{task.description}</p>
-                                  <p>
-                                    <small>
-                                      {task.creationDate = moment().format('MM/DD/YY')}
-                                    </small>
-                                  </p>
-                                    <Avatar aria-label='recipe'>T</Avatar>
-                                      <div style={{display: 'inline-flex', flexDirection: 'column'}}>
-                                        <IconButton 
-                                          aria-label='delete'
-                                          size='small' 
-                                          onClick={() => {
-                                            onDelete(task.id);
-                                          }}
-                                        >
-                                          <DeleteIcon fontSize='inherit' />
-                                        </IconButton>
-                                        <IconButton 
-                                          aria-label='delete' 
-                                          size='small'
-                                          onClick={() => {
-                                            onEdit(task.name, task.description, task.id);
-                                          }}
-                                        >
-                                          <EditIcon fontSize='inherit' />
-                                        </IconButton>
-                                      </div>
-                                      <div>
-                                        <IconButton size='small' onClick={() => setOpen(!open)}>
-                                          {
-                                            open ? 
-                                            <KeyboardArrowUpIcon fontSize='inherit' /> : 
-                                            <KeyboardArrowDownIcon fontSize='inherit' />
-                                          }
-                                        </IconButton>
-                                      </div>
-                                  </Box>
-                                  <SubTasks open={open} taskID={task.id} />
-                                </div>
-                              }}
-                            </Draggable>
-                          )
-                        })
+                          <TaskList projectId={id} ItemComponent={SummaryTask} />
+                      }
+                      {provided.placeholder}
+                    </Paper>
+                  }}
+                </Droppable>
+              </DragDropContext>
+            </Grid>
+            <Grid item xs={6}>
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                <h3>Tasks</h3>
+                <TaskDialog projectId={id} parentTaskId={null} onAdd={addNewTask} />
+              </div>
+              <DragDropContext onDragEnd={handleOnDragEnd}>
+                <Droppable droppableId='tasks'>
+                  {provided => {
+                    return <Paper 
+                      className={classes.paper} 
+                      {...provided.droppableProps} 
+                      ref={provided.innerRef}
+                    >
+                      {
+                        <TaskList projectId={id} ItemComponent={Task} />
                       }
                       {provided.placeholder}
                     </Paper>
@@ -216,7 +132,7 @@ export default function TasksPage(props) {
             <Grid item xs>
               <h3>Search</h3>
               <Paper className={classes.paper}>
-                <Search tasks={tasks} />
+                <Search />
               </Paper>
             </Grid>
           </Grid>

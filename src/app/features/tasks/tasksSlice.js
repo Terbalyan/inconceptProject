@@ -1,8 +1,8 @@
+import nextId from 'react-id-generator';
 export const ON_ADD_TASK = 'ON_ADD_TASK';
 export const DRAG_HAPPENED = 'DRAG_HAPPENED'; 
-export const ON_SEARCH = 'ON_SEARCH';
-export const DELETE_TASK = 'ON_DELETE';
-export const ON_EDIT = 'ON_EDIT';
+export const ON_DELETE_TASK = 'ON_DELETE_TASK';
+export const ON_EDIT_TASK = 'ON_EDIT_TASK';
 
 export default function tasksReducer(state=[], action) {
     const payload = action.payload;
@@ -12,7 +12,8 @@ export default function tasksReducer(state=[], action) {
             return [
                 ...state,
                 {
-                    id: state[state.length - 1].id + 1,
+                    id: nextId(),
+                    parentTaskId: payload.parentTaskId,
                     projectId: payload.projectId,
                     name: payload.name,
                     description: payload.description,
@@ -38,13 +39,23 @@ export default function tasksReducer(state=[], action) {
 
                 return [...state];
             }
+
+            // if(droppableIdStart !== droppableIdEnd) {
+            //     const [reorderedItemStart] = state.splice(droppableIndexStart, 1);
+
+            //     const [reorderedItemEnd] = state.splice(droppableIndexStart, 1);
+
+            //     state.splice(reorderedItemEnd, 0, reorderedItemStart); 
+            //     return [...state];
+            // }
+
             break;
-        case DELETE_TASK:
-            return state.filter(proj => proj.id !== payload.id);
-        case ON_EDIT:
-            let item = state.find(proj => proj.id === payload.id);
+        case ON_DELETE_TASK:
+            return deleteTaskTree(state, payload.id);
+        case ON_EDIT_TASK:
+            let item = state.find(task => task.id === payload.id);
             item.name = payload.name;
-            item.shortSummary = payload.shortSummary;
+            item.description = payload.description;
 
             return [...state];
         default:
@@ -52,22 +63,15 @@ export default function tasksReducer(state=[], action) {
     }
 }
 
-export const initialTasks = [
-    {
-        id: 1,
-        projectId: 2,
-        name: 'asdasd',
-        description: 'babab',
-        creationDate: '',
-        assignee: '',
-        estimatedTime: '',
-        status: false,
-        workedTime: ''
-    }
-];
+function deleteTaskTree(state, id) {
+    let subTasks = state.filter(t => t.parentTaskId === id);
+    subTasks.forEach(t => state = deleteTaskTree(state, t.id));
+    
+    return state.filter(t => t.id !== id);
+}
 
-export function getTasks(state, id) {
-    return state.tasks.filter(task => task.projectId === id);
+export function getTasks(state, projectId, parentTaskId) {
+    return state.tasks.filter(t => t.projectId === projectId && t.parentTaskId === parentTaskId);
 }
 
 export const sort = (
@@ -89,33 +93,100 @@ export const sort = (
     }
 }
 
-export function editNameDescription(newName, newDescription, newProjectId) {
+export function addTask(task) {
     return {
         type: ON_ADD_TASK,
+        payload: task
+    }
+}
+
+export function deleteTask(id) {
+    return {
+        type: ON_DELETE_TASK,
         payload: {
-            name: newName,
-            description: newDescription,
-            projectId: newProjectId,
+          id: id
         }
     }
 }
 
-export function deleteTask(newTaskId) {
+export function editTask(task) {
     return {
-        type: DELETE_TASK,
-        payload: {
-          id: newTaskId
-        }
+        type: ON_EDIT_TASK,
+        payload: task
     }
 }
 
-export function editTask(newName, newDescription, newTaskId) {
-    return {
-        type: ON_EDIT,
-        payload: {
-            name: newName,
-            description: newDescription,
-            id: newTaskId,
-        }
+export const initialTasks = [
+    {
+        id: 1,
+        projectId: 1,
+        parentTaskId: null,
+        name: 'Task 1',
+        description: 'Task 1 desc',
+        creationDate: '',
+        assignee: '',
+        estimatedTime: '',
+        status: false,
+        workedTime: '',
+    }, 
+    {
+        id: 2,
+        projectId: 1,
+        parentTaskId: null,
+        name: 'Task 2',
+        description: 'Task 2 desc',
+        creationDate: '',
+        assignee: '',
+        estimatedTime: '',
+        status: false,
+        workedTime: '',
+    },
+    {
+        id: 3,
+        projectId: 1,
+        parentTaskId: 1,
+        name: 'Task 1.1',
+        description: 'Task 1.1 desc',
+        creationDate: '',
+        assignee: '',
+        estimatedTime: '',
+        status: false,
+        workedTime: '',
+    },
+    {
+        id: 4,
+        projectId: 1,
+        parentTaskId: 3,
+        name: 'Task 1.1.1',
+        description: 'Task 1.1.1 desc',
+        creationDate: '',
+        assignee: '',
+        estimatedTime: '',
+        status: false,
+        workedTime: '',
+    },
+    {
+        id: 5,
+        projectId: 1,
+        parentTaskId: 3,
+        name: 'Task 1.1.2',
+        description: 'Task 1.1.2 desc',
+        creationDate: '',
+        assignee: '',
+        estimatedTime: '',
+        status: false,
+        workedTime: '',
+    },
+    {
+        id: 6,
+        projectId: 2,
+        parentTaskId: null,
+        name: 'Task 2',
+        description: 'Task 2 desc',
+        creationDate: '',
+        assignee: '',
+        estimatedTime: '',
+        status: false,
+        workedTime: '',
     }
-}
+];

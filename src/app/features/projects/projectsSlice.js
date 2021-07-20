@@ -1,4 +1,3 @@
-import nextId from "react-id-generator";
 import AssignmentIcon from '@material-ui/icons/Assignment';
 export const ON_ADD = 'ON_ADD';
 export const ON_DELETE = 'ON_DELETE';

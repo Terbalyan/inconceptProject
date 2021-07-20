@@ -76,10 +76,8 @@ export default function EditDialog(props) {
                         type='submit'
                         color='primary'
                         onClick={() => {
-                            if(name && shortSummary) {
-                                newProps();
-                                handleClose();
-                            }
+                            newProps();
+                            handleClose();
                         }}
                     >
                         Save

@@ -28,7 +28,7 @@ export default function Search() {
                 onChange={handleFilter}
             />
             
-            {filtredTasks.length !== 0 && (
+            {
                 filtredTasks.map(task => {
                     return (
                         <Box
@@ -44,7 +44,7 @@ export default function Search() {
                         </Box>
                     )
                 })
-            )}
+            }
         </>
     )
 }

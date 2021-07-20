@@ -23,14 +23,14 @@ export default function TaskDialog({projectId, parentTaskId, onAdd}) {
     };
 
     const add = () => {
-        onAdd(createNewTask());
+        onAdd(createTask());
 
         setName('');
         setDescription('');
         setOpen(false);
     }
 
-    const createNewTask = () => {
+    const createTask = () => {
         return {
             projectId: projectId,
             parentTaskId: parentTaskId,

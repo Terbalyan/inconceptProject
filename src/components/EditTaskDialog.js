@@ -29,9 +29,10 @@ export default function EditTaskDialog({task, onEdit}) {
     }
 
     const editTask = () => {
-        task.name = name;
-        task.description = description;
-        return task;
+        return {
+            ...task,
+            ...{ name,  description }
+        };
     };
 
     return (

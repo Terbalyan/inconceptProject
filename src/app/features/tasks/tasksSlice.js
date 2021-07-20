@@ -1,8 +1,9 @@
 import nextId from 'react-id-generator';
+
 export const ON_ADD_TASK = 'ON_ADD_TASK';
-export const DRAG_HAPPENED = 'DRAG_HAPPENED'; 
 export const ON_DELETE_TASK = 'ON_DELETE_TASK';
 export const ON_EDIT_TASK = 'ON_EDIT_TASK';
+export const ON_REORDER_TASKS = 'ON_REORDER_TASKS';
 
 export default function tasksReducer(state=[], action) {
     const payload = action.payload;
@@ -24,32 +25,6 @@ export default function tasksReducer(state=[], action) {
                     workedTime: ''
                 }
             ];
-        case DRAG_HAPPENED:
-            const {
-                droppableIdStart,
-                droppableIdEnd,
-                droppableIndexEnd,
-                droppableIndexStart,
-                draggableId
-            } = payload;
-            
-            if(droppableIdStart === droppableIdEnd) {
-                const [reorderedItem] = state.splice(droppableIndexStart, 1);
-                state.splice(droppableIndexEnd, 0, reorderedItem);
-
-                return [...state];
-            }
-
-            // if(droppableIdStart !== droppableIdEnd) {
-            //     const [reorderedItemStart] = state.splice(droppableIndexStart, 1);
-
-            //     const [reorderedItemEnd] = state.splice(droppableIndexStart, 1);
-
-            //     state.splice(reorderedItemEnd, 0, reorderedItemStart); 
-            //     return [...state];
-            // }
-
-            break;
         case ON_DELETE_TASK:
             return deleteTaskTree(state, payload.id);
         case ON_EDIT_TASK:
@@ -58,39 +33,43 @@ export default function tasksReducer(state=[], action) {
             item.description = payload.description;
 
             return [...state];
+        case ON_REORDER_TASKS:
+            payload.forEach(reorderedTask => {
+                let task = state.find(t => reorderedTask.id === t.id);
+                task.index = reorderedTask.index;
+            });
+
+            return [...state];
         default:
             return state;
     }
 }
 
-function deleteTaskTree(state, id) {
-    let subTasks = state.filter(t => t.parentTaskId === id);
-    subTasks.forEach(t => state = deleteTaskTree(state, t.id));
+function findTaskTreeIds(tasks, taskId) {
+    let ids = [taskId];
     
-    return state.filter(t => t.id !== id);
+    let subTasks = tasks.filter(t => t.parentTaskId === taskId);
+    subTasks.forEach(t => ids.push(...findTaskTreeIds(tasks, t.id)));
+
+    return ids;
+}
+
+function deleteTaskTree(tasks, id) {
+    let ids = findTaskTreeIds(tasks, id);
+    return tasks.filter(t => !ids.includes(t.id));
 }
 
 export function getTasks(state, projectId, parentTaskId) {
-    return state.tasks.filter(t => t.projectId === projectId && t.parentTaskId === parentTaskId);
-}
-
-export const sort = (
-    droppableIdStart,
-    droppableIdEnd,
-    droppableIndexStart,
-    droppableIndexEnd,
-    draggableId
-) => {
-    return {
-        type: DRAG_HAPPENED,
-        payload: {
-            droppableIdStart,
-            droppableIdEnd,
-            droppableIndexStart,
-            droppableIndexEnd,
-            draggableId
-        }
-    }
+    return state.tasks.filter(t => t.projectId === projectId && t.parentTaskId === parentTaskId)
+        .sort((t1, t2) =>  {
+            if (t1.index < t2.index) {
+                return -1;
+            }
+            if (t1.index > t2.index) {
+                return 1;
+            }
+            return 0;
+        });
 }
 
 export function addTask(task) {
@@ -116,6 +95,13 @@ export function editTask(task) {
     }
 }
 
+export function reorderTasks(reorderedTasks) {
+    return {
+        type: ON_REORDER_TASKS,
+        payload: reorderedTasks
+    }
+}
+
 export const initialTasks = [
     {
         id: 1,
@@ -128,18 +114,20 @@ export const initialTasks = [
         estimatedTime: '',
         status: false,
         workedTime: '',
+        index: 1
     }, 
     {
         id: 2,
         projectId: 1,
         parentTaskId: null,
-        name: 'Task 2',
+        name: 'Task 1.2',
         description: 'Task 2 desc',
         creationDate: '',
         assignee: '',
         estimatedTime: '',
         status: false,
         workedTime: '',
+        index: 3
     },
     {
         id: 3,
@@ -188,5 +176,18 @@ export const initialTasks = [
         estimatedTime: '',
         status: false,
         workedTime: '',
+    },
+    {
+        id: 7,
+        projectId: 1,
+        parentTaskId: null,
+        name: 'Task 3',
+        description: 'Task 3 desc',
+        creationDate: '',
+        assignee: '',
+        estimatedTime: '',
+        status: false,
+        workedTime: '',
+        index: 2
     }
 ];

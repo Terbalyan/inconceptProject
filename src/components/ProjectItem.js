@@ -87,7 +87,7 @@ export default function ProjectItem({project, onDelete, onEdit}) {
                     <EditDialog
                         onEdit={onEdit} 
                         project={project}
-                        onDelete={onDelete}
+                        // onDelete={onDelete}
                     />
                 </div>
             </div>
